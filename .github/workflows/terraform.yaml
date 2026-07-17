@@ -61,6 +61,7 @@ jobs:
 
       - name: Terraform Plan
         run: terraform plan -out=tfplan.tfout
+        if: ${{ github.event.inputs.plan_destroy != 'true' && github.event.inputs.destroy != 'true' }}
 
       - name: Terraform Apply
         run: terraform apply -auto-approve tfplan.tfout
@@ -68,10 +69,10 @@ jobs:
 
       - name: Plan Terraform Destroy
         run: terraform plan -destroy -out=tfplan.tfout
-        if: ${{ github.event.inputs.plan_destroy == 'true' }}
-              
+        if: ${{ github.event.inputs.plan_destroy == 'true' || github.event.inputs.destroy == 'true' }}
+
       - name: Terraform Destroy
-        run: terraform apply -destroy -auto-approve tfplan.tfout
+        run: terraform apply -auto-approve tfplan.tfout
         if: ${{ github.event.inputs.destroy == 'true' }}
 
 
